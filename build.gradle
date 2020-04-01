@@ -1,0 +1,33 @@
+ext.person = "Harry Potter"
+
+task hello {
+    doLast {
+        println "Hello World : $person"
+    }
+}
+
+/*
+ * Alternate syntax for setting doLast. It could have either been nested in the 'hello' task
+ * definition or it can be done using the '.' operator
+ */
+hello.doFirst {
+    println "Pre step for hello !!"
+}
+
+/* 
+ * << is equivalent to doLast. But, this operator is going to be deprecated soon and shouldn't be used. 
+ * The preferred way is to use 'doLast' instead directly.
+task hi << {
+    println "Hi !!"
+}
+ */
+
+/*
+ * This one declares its dependency on 'hello' task which will ensure that
+ * 'hello' runs before 'hi' gets executed
+ */
+task hi(dependsOn : hello) {
+    doLast {
+        println "Hi !!"
+    }
+}
