@@ -23,10 +23,13 @@ if (x == false) {
     println "false false"
 }
 
-println "$container"
-String buildtype = "$container"
-if (buildtype.equals("light")) {
-    println "build type is light"
+String buildtype = 'default'
+if (project.hasProperty('container')) {
+    println 'container property set correctly as $container'
+    buildtype = $container
+} else {
+    println 'container property not set, using default'
+    buildtype = 'default'
 }
 
 
@@ -35,28 +38,25 @@ if (buildtype.equals("light")) {
         // This dependency is used internally, and not exposed to consumers on their own compile classpath.
         implementation 'com.google.guava:guava:23.0'
 
-        // Use JUnit test framework
-        testImplementation 'junit:junit:4.12'
     }
 } else if (buildtype.equals("heavy")) {
     dependencies {
         // This dependency is exported to consumers, that is to say found on their compile classpath.
         api 'org.apache.commons:commons-math3:3.6.1'
-
-        // Use JUnit test framework
-        testImplementation 'junit:junit:4.12'
     }
 } else {
     dependencies {
-        // This dependency is exported to consumers, that is to say found on their compile classpath.
-        api 'org.apache.commons:commons-math3:3.6.1'
-
-        // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-        implementation 'com.google.guava:guava:23.0'
-
-        // Use JUnit test framework
-        testImplementation 'junit:junit:4.12'
+        implementation('com.github.spotbugs:spotbugs:4.0.1') {
+            transitive = false
+        }
     }
+}
+
+dependencies {
+    implementation('org.hibernate:hibernate-core:3.6.7.Final') {
+        transitive = false
+    }
+    testImplementation 'junit:junit:4.12'
 }
 
 if (buildtype.equals("light")) {
@@ -75,3 +75,5 @@ jar {
                    'Implementation-Version': project.version)
     }
 }
+
+mkdir "./trial_dir" 
